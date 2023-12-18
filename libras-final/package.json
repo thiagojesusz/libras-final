@@ -9,9 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tensorflow-models/handpose": "^0.1.0",
+    "@tensorflow/tfjs": "^4.15.0",
+    "@tensorflow/tfjs-backend-webgl": "^4.15.0",
+    "fingerpose": "^0.1.0",
+    "next": "14.0.4",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.0.4"
+    "react-timer-hook": "^3.0.7",
+    "react-webcam": "^7.2.0"
   },
   "devDependencies": {
     "autoprefixer": "^10.0.1",
