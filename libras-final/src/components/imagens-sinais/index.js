@@ -1,29 +1,29 @@
-import A_sign from "./A.svg"
-import B_sign from "./B.svg"
-import C_sign from "./C.svg"
-import D_sign from "./D.svg"
-import E_sign from "./E.svg"
-import F_sign from "./F.svg"
-import G_sign from "./G.svg"
-import H_sign from "./H.svg"
-import I_sign from "./I.svg"
-import J_sign from "./J.svg"
-import K_sign from "./K.svg"
-import L_sign from "./L.svg"
-import M_sign from "./M.svg"
-import N_sign from "./N.svg"
-import O_sign from "./O.svg"
-import P_sign from "./P.svg"
-import Q_sign from "./Q.svg"
-import R_sign from "./R.svg"
-import S_sign from "./S.svg"
-import T_sign from "./T.svg"
-import U_sign from "./U.svg"
-import V_sign from "./V.svg"
-import W_sign from "./W.svg"
-import X_sign from "./X.svg"
-import Y_sign from "./Y.svg"
-import Z_sign from "./Z.svg"
+import A_sinal from "./A.svg"
+import B_sinal from "./B.svg"
+import C_sinal from "./C.svg"
+import D_sinal from "./D.svg"
+import E_sinal from "./E.svg"
+import F_sinal from "./F.svg"
+import G_sinal from "./G.svg"
+import H_sinal from "./H.svg"
+import I_sinal from "./I.svg"
+import J_sinal from "./J.svg"
+import K_sinal from "./K.svg"
+import L_sinal from "./L.svg"
+import M_sinal from "./M.svg"
+import N_sinal from "./N.svg"
+import O_sinal from "./O.svg"
+import P_sinal from "./P.svg"
+import Q_sinal from "./Q.svg"
+import R_sinal from "./R.svg"
+import S_sinal from "./S.svg"
+import T_sinal from "./T.svg"
+import U_sinal from "./U.svg"
+import V_sinal from "./V.svg"
+import W_sinal from "./W.svg"
+import X_sinal from "./X.svg"
+import Y_sinal from "./Y.svg"
+import Z_sinal from "./Z.svg"
 
 import A_hand from "./Ahand.jpg"
 import B_hand from "./Bhand.jpg"
@@ -52,36 +52,36 @@ import X_hand from "./Xhand.jpg"
 import Y_hand from "./Yhand.jpg"
 import Z_hand from "./Zhand.jpg"
 
-export const Signimage = {
-  A: A_sign,
-  B: B_sign,
-  C: C_sign,
-  D: D_sign,
-  E: E_sign,
-  F: F_sign,
-  G: G_sign,
-  H: H_sign,
-  I: I_sign,
-  J: J_sign,
-  K: K_sign,
-  L: L_sign,
-  M: M_sign,
-  N: N_sign,
-  O: O_sign,
-  P: P_sign,
-  Q: Q_sign,
-  R: R_sign,
-  S: S_sign,
-  T: T_sign,
-  U: U_sign,
-  V: V_sign,
-  W: W_sign,
-  X: X_sign,
-  Y: Y_sign,
-  Z: Z_sign,
+export const Sinalimage = {
+  A: A_sinal,
+  B: B_sinal,
+  C: C_sinal,
+  D: D_sinal,
+  E: E_sinal,
+  F: F_sinal,
+  G: G_sinal,
+  H: H_sinal,
+  I: I_sinal,
+  J: J_sinal,
+  K: K_sinal,
+  L: L_sinal,
+  M: M_sinal,
+  N: N_sinal,
+  O: O_sinal,
+  P: P_sinal,
+  Q: Q_sinal,
+  R: R_sinal,
+  S: S_sinal,
+  T: T_sinal,
+  U: U_sinal,
+  V: V_sinal,
+  W: W_sinal,
+  X: X_sinal,
+  Y: Y_sinal,
+  Z: Z_sinal,
 }
 
-export const Signpass = [
+export const Sinalpass = [
   {
     src: A_hand,
     alt: "A",

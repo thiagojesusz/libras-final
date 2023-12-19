@@ -4,24 +4,12 @@ import * as handpose from "@tensorflow-models/handpose";
 import Webcam from "react-webcam";
 import { drawHand } from "../components/handposeutil";
 import * as fp from "fingerpose";
-import Handsigns from "../components/handsigns";
+import SinaisDeMao from "../components/sinais";
 import { useStopwatch } from "react-timer-hook";
 
-import {
-  Text,
-  Heading,
-  Button,
-  Image,
-  Stack,
-  Container,
-  div,
-  VStack,
-  ChakraProvider,
-} from "@chakra-ui/react";
+import { Sinalimage, Sinalpass } from "../components/imagens-sinais";
 
-import { Signimage, Signpass } from "../components/handimage";
-
-export default function Home() {
+const Inicio = () => {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -31,219 +19,187 @@ export default function Home() {
     minutes,
     hours,
     days,
-    isRunning,
-    start,
-    pause,
     reset,
   } = useStopwatch({ autoStart: true });
 
-  const [camState, setCamState] = useState("on");
+  const [estadoCam, setEstadoCam] = useState("ligada");
+  const [sinal, setSinal] = useState(null);
 
-  const [sign, setSign] = useState(null);
+  let listaSinais = [];
+  let sinalAtual = 0;
 
-  let signList = [];
-  let currentSign = 0;
+  let estadoJogo = "iniciado";
 
-  let gamestate = "started";
-
-  async function runHandpose() {
+  const executarHandpose = async () => {
     const net = await handpose.load();
-    _signList();
+    _listaSinais();
 
     setInterval(() => {
-      detect(net);
+      detectar(net);
     }, 150);
-  }
+  };
 
-  function _signList() {
-    signList = generateSigns();
-  }
+  const _listaSinais = () => {
+    listaSinais = gerarSinais();
+  };
 
-  function shuffle(a) {
+  const embaralhar = (a) => {
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [a[i], a[j]] = [a[j], a[i]];
     }
     return a;
-  }
+  };
 
-  function generateSigns() {
-    const password = shuffle(Signpass);
-    return password;
-  }
+  const gerarSinais = () => {
+    const senha = embaralhar(Sinalpass);
+    return senha;
+  };
 
-  const detect = async (net) => {
+  const detectar = async (net) => {
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
       webcamRef.current.video.readyState === 4
     ) {
       const video = webcamRef.current.video;
-      const videoWidth = webcamRef.current.video.videoWidth;
-      const videoHeight = webcamRef.current.video.videoHeight;
+      const larguraVideo = webcamRef.current.video.videoWidth;
+      const alturaVideo = webcamRef.current.video.videoHeight;
 
-      webcamRef.current.video.width = videoWidth;
-      webcamRef.current.video.height = videoHeight;
+      webcamRef.current.video.width = larguraVideo;
+      webcamRef.current.video.height = alturaVideo;
 
-      canvasRef.current.width = videoWidth;
-      canvasRef.current.height = videoHeight;
+      canvasRef.current.width = larguraVideo;
+      canvasRef.current.height = alturaVideo;
 
-      const hand = await net.estimateHands(video);
+      const mao = await net.estimateHands(video);
 
-      if (hand.length > 0) {
+      if (mao.length > 0) {
         const GE = new fp.GestureEstimator([
           fp.Gestures.ThumbsUpGesture,
-          Handsigns.aSign,
-          Handsigns.bSign,
-          Handsigns.cSign,
-          Handsigns.dSign,
-          Handsigns.eSign,
-          Handsigns.fSign,
-          Handsigns.gSign,
-          Handsigns.hSign,
-          Handsigns.iSign,
-          Handsigns.jSign,
-          Handsigns.kSign,
-          Handsigns.lSign,
-          Handsigns.mSign,
-          Handsigns.nSign,
-          Handsigns.oSign,
-          Handsigns.pSign,
-          Handsigns.qSign,
-          Handsigns.rSign,
-          Handsigns.sSign,
-          Handsigns.tSign,
-          Handsigns.uSign,
-          Handsigns.vSign,
-          Handsigns.wSign,
-          Handsigns.xSign,
-          Handsigns.ySign,
-          Handsigns.zSign,
+          SinaisDeMao.aSinal,
+          SinaisDeMao.bSinal,
+          SinaisDeMao.cSinal,
+          SinaisDeMao.dSinal,
+          SinaisDeMao.eSinal,
+          SinaisDeMao.fSinal,
+          SinaisDeMao.gSinal,
+          SinaisDeMao.hSinal,
+          SinaisDeMao.iSinal,
+          SinaisDeMao.jSinal,
+          SinaisDeMao.kSinal,
+          SinaisDeMao.lSinal,
+          SinaisDeMao.mSinal,
+          SinaisDeMao.nSinal,
+          SinaisDeMao.oSinal,
+          SinaisDeMao.pSinal,
+          SinaisDeMao.qSinal,
+          SinaisDeMao.rSinal,
+          SinaisDeMao.sSinal,
+          SinaisDeMao.tSinal,
+          SinaisDeMao.uSinal,
+          SinaisDeMao.vSinal,
+          SinaisDeMao.wSinal,
+          SinaisDeMao.xSinal,
+          SinaisDeMao.ySinal,
+          SinaisDeMao.zSinal,
         ]);
 
-        const estimatedGestures = await GE.estimate(hand[0].landmarks, 6.5);
+        const gestosEstimados = await GE.estimate(mao[0].landmarks, 6.5);
 
-        if (gamestate === "started") {
-          document.querySelector("#app-title").innerText =
+        if (estadoJogo === "iniciado") {
+          document.querySelector("#titulo-aplicacao").innerText =
             'Faça um ok "👍" com a mão para começar.';
         }
 
         if (
-          estimatedGestures.gestures !== undefined &&
-          estimatedGestures.gestures.length > 0
+          gestosEstimados.gestures !== undefined &&
+          gestosEstimados.gestures.length > 0
         ) {
-          const confidence = estimatedGestures.gestures.map(
-            (p) => p.confidence
-          );
-          const maxConfidence = confidence.indexOf(
-            Math.max.apply(undefined, confidence)
+          const confianca = gestosEstimados.gestures.map((p) => p.confidence);
+          const maxConfianca = confianca.indexOf(
+            Math.max.apply(undefined, confianca)
           );
 
           if (
-            estimatedGestures.gestures[maxConfidence].name === "thumbs_up" &&
-            gamestate !== "played"
+            gestosEstimados.gestures[maxConfianca].name === "thumbs_up" &&
+            estadoJogo !== "jogado"
           ) {
-            _signList();
-            gamestate = "played";
-            document.getElementById("emojimage").classList.add("play");
-            document.querySelector(".tutor-text").innerText =
+            _listaSinais();
+            estadoJogo = "jogado";
+            document.getElementById("imagem-emoji").classList.add("play");
+            document.querySelector(".texto-tutorial").innerText =
               "faça um gesto com a mão baseado na letra mostrada abaixo";
-          } else if (gamestate === "played") {
-            document.querySelector("#app-title").innerText = "";
+          } else if (estadoJogo === "jogado") {
+            document.querySelector("#titulo-aplicacao").innerText = "";
 
-            //looping the sign list
-            if (currentSign === signList.length) {
-              _signList();
-              currentSign = 0;
+            if (sinalAtual === listaSinais.length) {
+              _listaSinais();
+              sinalAtual = 0;
               return;
             }
 
             if (
-              typeof signList[currentSign].src.src === "string" ||
-              signList[currentSign].src.src instanceof String
+              typeof listaSinais[sinalAtual].src.src === "string" ||
+              listaSinais[sinalAtual].src.src instanceof String
             ) {
               document
-                .getElementById("emojimage")
-                .setAttribute("src", signList[currentSign].src.src);
+                .getElementById("imagem-emoji")
+                .setAttribute("src", listaSinais[sinalAtual].src.src);
               if (
-                signList[currentSign].alt ===
-                estimatedGestures.gestures[maxConfidence].name
+                listaSinais[sinalAtual].alt ===
+                gestosEstimados.gestures[maxConfianca].name
               ) {
-                currentSign++;
-                adicionarSegundosAoStorage(
-                  document.querySelector("#totalTimer").textContent
+                sinalAtual++;
+                adicionarSegundosAoArmazenamento(
+                  document.querySelector("#totalTempo").textContent
                 );
                 reset();
               }
-              setSign(estimatedGestures.gestures[maxConfidence].name);
+              setSinal(gestosEstimados.gestures[maxConfianca].name);
             }
-          } else if (gamestate === "finished") {
+          } else if (estadoJogo === "finalizado") {
             return;
           }
         }
       }
-      // Draw hand lines
       const ctx = canvasRef.current.getContext("2d");
-      drawHand(hand, ctx);
+      drawHand(mao, ctx);
     }
   };
 
-  function adicionarSegundosAoStorage(segundos) {
-    // Obtém a lista de segundos do sessionStorage (se existir)
+  const adicionarSegundosAoArmazenamento = (segundos) => {
     let listaSegundos =
       JSON.parse(sessionStorage.getItem("listaSegundos")) || [];
 
-    // Adiciona os segundos à lista
     listaSegundos.push(segundos);
 
-    // Atualiza o sessionStorage com a lista atualizada
     sessionStorage.setItem("listaSegundos", JSON.stringify(listaSegundos));
 
-    // Retorna a lista atualizada
     return listaSegundos;
-  }
+  };
 
-  function copiarListaParaClipboard() {
-    // Obtém a lista de segundos do sessionStorage
+  const copiarListaParaAreaDeTransferencia = () => {
     const listaSegundos =
       JSON.parse(sessionStorage.getItem("listaSegundos")) || [];
 
-    // Converte a lista para uma string separada por vírgulas
     const listaComoString = listaSegundos.join(", ");
 
-    // Cria um elemento de texto temporário para copiar para a área de transferência
     const elementoTemporario = document.createElement("textarea");
     elementoTemporario.value = listaComoString;
 
-    // Adiciona o elemento à página
     document.body.appendChild(elementoTemporario);
-
-    // Seleciona e copia o conteúdo do elemento de texto
     elementoTemporario.select();
     document.execCommand("copy");
 
-    // Remove o elemento temporário
     document.body.removeChild(elementoTemporario);
 
-    // Exibe uma mensagem ou realiza outras ações conforme necessário
     alert("Lista copiada para a área de transferência!");
-  }
-
-  //   if (sign) {
-  //     console.log(sign, Signimage[sign])
-  //   }
+  };
 
   useEffect(() => {
-    runHandpose();
+    executarHandpose();
   }, []);
-
-  function turnOffCamera() {
-    if (camState === "on") {
-      setCamState("off");
-    } else {
-      setCamState("on");
-    }
-  }
 
   return (
     <div>
@@ -261,10 +217,10 @@ export default function Home() {
           <br></br>
           <br></br>
           <span>
-            Total em segundos: <b id="totalTimer">{totalSeconds}</b>
+            Total em segundos: <b id="totalTempo">{totalSeconds}</b>
           </span>
         </div>
-        <div width={"100%"}>
+        <div style={{ width: "100%" }}>
           <Webcam id="webcam" ref={webcamRef} audio={false} />
           <canvas id="gesture-canvas" ref={canvasRef} style={{}} />
         </div>
@@ -274,7 +230,7 @@ export default function Home() {
               id="webcam-container"
               style={{ borderWidth: "1px", borderRadius: "12px" }}
             >
-              {sign ? (
+              {sinal ? (
                 <div
                   style={{
                     marginLeft: "auto",
@@ -286,10 +242,10 @@ export default function Home() {
                 >
                   <h1>Letras Detectadas</h1>
                   <img
-                    alt="signImage"
+                    alt="sinalImage"
                     src={
-                      Signimage[sign]?.src
-                        ? Signimage[sign].src
+                      Sinalimage[sinal]?.src
+                        ? Sinalimage[sinal].src
                         : "/loveyou_emoji.svg"
                     }
                     style={{
@@ -325,13 +281,13 @@ export default function Home() {
             >
               <div style={{ height: "20px" }} h="20px"></div>
               <h3
-                className="tutor-text"
+                className="texto-tutorial"
                 style={{ color: "white", textAlign: "center" }}
               ></h3>
               <button
                 style={{ color: "black", background: "gray", padding: "5px" }}
                 onClick={() => {
-                  copiarListaParaClipboard();
+                  copiarListaParaAreaDeTransferencia();
                 }}
               >
                 Copiar valores
@@ -348,7 +304,7 @@ export default function Home() {
             </div>
 
             <h1
-              id="app-title"
+              id="titulo-aplicacao"
               style={{
                 filter: "hue-rotate(45deg)",
                 color: "white",
@@ -365,11 +321,13 @@ export default function Home() {
                 height: "150px",
                 objectFit: "cover",
               }}
-              id="emojimage"
+              id="imagem-emoji"
             />
           </div>
         </div>
       </div>
     </div>
   );
-}
+};
+
+export default Inicio;
